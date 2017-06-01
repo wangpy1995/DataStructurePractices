@@ -1,7 +1,7 @@
 #include "list/List.c"
-#include "list/TwoStacks.c""
+//#include "list/TwoStacks.c""
 
 int main() {
-    testStack();
+//    testStack();
     return 0;
 }
