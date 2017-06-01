@@ -34,7 +34,7 @@ void insert(ElementType item, List *list) {
     *list = temp;
 }
 
-void display(List list) {
+void displayList(List list) {
     List p = list;
     while (p->Next) {
         printf("%d -> ", p->Data);
@@ -98,4 +98,22 @@ int length(List list) {
         count++;
     }
     return count;
+}
+
+void testList() {
+    List list = MakeEmpty();
+    list->Data = 1;
+    insert(2, &list);
+    insert(3, &list);
+    insert(4, &list);
+    insert(5, &list);
+    insert(6, &list);
+    displayList(list);
+    del(list, 8);
+    find(list, 6);
+    find(list, 5);
+    findKth(list, -1);
+    displayList(list);
+/*    List r = Reverse(list);
+    displayStack(r);*/
 }
