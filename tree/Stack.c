@@ -13,12 +13,13 @@ struct TNode {
     BinTree Left;
     BinTree Right;
 };
-union Un {
-    BinTree p;
+struct Un {
     //0->l_child 1->r_child
     int tag;
+    BinTree p;
 };
-typedef union Un *U;
+typedef struct Un *U;
+
 typedef struct LSNode *S;
 struct LSNode {
     S next;
@@ -42,12 +43,12 @@ void push(U item, S *stack) {
     *stack = temp;
 }
 
-S pop(S *stack) {
-    if (!stack) {
+U pop(S *stack) {
+    if (!*stack) {
         perror("NULL Stack");
         return NULL;
     }
-    S *s = stack;
+    U item = (*stack)->item;
     *stack = (*stack)->next;
-    return *s;
+    return item;
 }

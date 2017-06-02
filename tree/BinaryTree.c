@@ -2,8 +2,6 @@
 // Created by wpy on 2017/6/1.
 //
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "Stack.c"
 
 /*int GetHeight(BinTree BT) {
@@ -13,34 +11,60 @@
     return (m > n ? m : n) + 1;
 }*/
 
+void pushLeft(BinTree *root, S *s);
+
+void pushRight(BinTree *root, S *s);
+
 //非递归后序遍历
 int GetHeight(BinTree BT) {
     if (!BT) return 0;
     S s = makeEmpty();
     BinTree root = BT;
-    S item;
-    int tag;
-    U u = (U *) malloc(sizeof(union Un));
-    u->p = &root;
+    U item;
+    U u = (U) malloc(sizeof(struct Un));
+    u->p = root;
     u->tag = 0;
     push(u, &s);
     while (root) {
-        pushLeft(&root, &s);
-        pushRight(&root, &s);
-        if (!root && s) {
+        while (root->Left) {
+            pushLeft(&root, &s);
+        }
+        while (root->Right) {
+            pushRight(&root, &s);
+            while (root->Left) pushLeft(&root, &s);
+        }
+        if (!root->Left && s) {
             item = pop(&s);
-            printf("%d\n", item->item->p->Data);
+            printf("%d\n", item->p->Data);
             root = s->item->p;
-            if (item->item->tag == 0) {
-                if (!root->Right) {
+            if (item->tag == 0) {
+                while (!root->Right) {
                     item = pop(&s);
-                    printf("%d\n", item->item->p->Data);
+                    printf("%d\n", item->p->Data);
                     root = s->item->p;
-                } else pushRight(&root, s);
-            } else if (item->item->tag == 1) {
+                }
+                while (item->tag == 1) {
+                    item = pop(&s);
+                    printf("%d\n", item->p->Data);
+                    root = s->item->p;
+                }
+                pushRight(&root, &s);
+            } else if (item->tag == 1) {
                 item = pop(&s);
-                printf("%d\n", item->item->p->Data);
+                printf("%d\n", item->p->Data);
                 root = s->item->p;
+                while (!root->Right) {
+                    item = pop(&s);
+                    printf("%d\n", item->p->Data);
+                    root = s->item->p;
+                    if (root == BT) {
+                        item = pop(&s);
+                        printf("%d\n", item->p->Data);
+                        root = NULL;
+                        break;
+                    }
+                }
+                if (root && root->Right)pushRight(&root, &s);
             }
         }
     }
@@ -50,27 +74,24 @@ int GetHeight(BinTree BT) {
 void pushLeft(BinTree *root, S *s) {
     /*if (!(*root)->Left)
         return;*/
-    while (*root) {
-        U u = (U *) malloc(sizeof(union Un));
-        BinTree l = (*root)->Left;
-        u->p = &l;
-        u->tag = 0;
-        push(u, s);
-        *root = (*root)->Left;
-    }
+    U u = (U) malloc(sizeof(struct Un));
+    u->p = (*root)->Left;
+    u->tag = 0;
+    push(u, s);
+//    if ((*root)->Left)
+    *root = (*root)->Left;
 }
 
 void pushRight(BinTree *root, S *s) {
     /*if (!(*root)->Right)
         return;*/
-    while (*root) {
-        U u = (U *) malloc(sizeof(union Un));
-        BinTree r = (*root)->Right;
-        u->p = &r;
-        u->tag = 1;
-        push(u, s);
+
+    U u = (U) malloc(sizeof(struct Un));
+    u->p = (*root)->Right;
+    u->tag = 1;
+    push(u, s);
+    if ((*root)->Right)
         *root = (*root)->Right;
-    }
 }
 
 BinTree createTreeNode(ElementType data) {
