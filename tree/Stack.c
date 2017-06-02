@@ -4,18 +4,25 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "BinaryTree.c"
 
+typedef int ElementType;
+typedef struct TNode *Position;
+typedef Position BinTree;
+struct TNode {
+    ElementType Data;
+    BinTree Left;
+    BinTree Right;
+};
 union Un {
-    Position p;
+    BinTree p;
     //0->l_child 1->r_child
     int tag;
 };
-typedef union Un U;
+typedef union Un *U;
 typedef struct LSNode *S;
 struct LSNode {
-    U item;
     S next;
+    U item;
 };
 
 S makeEmpty() {
