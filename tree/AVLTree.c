@@ -23,16 +23,9 @@ AVL newNode() {
 }
 
 int getBF(AVL node) {
-    AVL l_ptr = node, r_ptr = node;
-    int lh = 0, rh = 0;
-    while (l_ptr) {
-        lh++;
-        l_ptr = l_ptr->l_child;
-    }
-    while (r_ptr) {
-        rh++;
-        r_ptr = r_ptr->r_child;
-    }
+    if (!node)return 0;
+    int lh = getBF(node->l_child);
+    int rh = getBF(node->r_child);
     return lh - rh;
 }
 
